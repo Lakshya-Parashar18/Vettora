@@ -66,8 +66,17 @@ export default function FileList({ files, onRemoveFile, onClearAll }) {
       </div>
 
       <div
-        onWheel={(e) => e.stopPropagation()}
-        onTouchMove={(e) => e.stopPropagation()}
+        onWheel={(e) => {
+          const el = e.currentTarget;
+          if (el.scrollHeight > el.clientHeight) {
+            const isAtTop = el.scrollTop === 0 && e.deltaY < 0;
+            const isAtBottom =
+              Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) < 1 && e.deltaY > 0;
+            if (!isAtTop && !isAtBottom) {
+              e.stopPropagation();
+            }
+          }
+        }}
         className="space-y-2 max-h-[260px] overflow-y-auto pr-1"
       >
         {files.map((file, index) => {

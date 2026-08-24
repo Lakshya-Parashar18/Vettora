@@ -40,16 +40,12 @@ export default function AnimatedBackground() {
       // Render independent breathing micro-star dots
       stars.forEach((star) => {
         star.phase += star.speed;
-        // Smooth sine wave breathing opacity (0.10 to 0.55)
         const alpha = ((Math.sin(star.phase) + 1) / 2) * 0.45 + 0.10;
 
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${star.color}, ${alpha})`;
-        ctx.shadowColor = `rgba(${star.color}, ${alpha * 0.7})`;
-        ctx.shadowBlur = 10;
         ctx.fill();
-        ctx.shadowBlur = 0;
       });
 
       animationFrameId = requestAnimationFrame(render);
@@ -68,18 +64,12 @@ export default function AnimatedBackground() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden select-none"
     >
-      {/* High Density Soothing Micro-Star Constellation Canvas */}
+      {/* 60FPS Micro-Star Canvas */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"
         className="w-full h-full opacity-90 transition-opacity duration-500"
       />
-
-      {/* Ultra-Soft Breathing Ambient Glow Orbs */}
-      <div className="absolute -top-40 -left-40 w-[650px] h-[650px] rounded-full bg-[var(--accent)]/08 dark:bg-[var(--accent)]/06 blur-[140px] animate-ambient-pulse" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[550px] h-[550px] rounded-full bg-amber-500/06 dark:bg-amber-500/04 blur-[160px] animate-ambient-pulse" />
-      <div className="absolute top-2/3 left-1/4 w-[450px] h-[450px] rounded-full bg-emerald-500/06 dark:bg-emerald-500/04 blur-[150px] animate-ambient-pulse" />
-      <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-[var(--accent-2)]/08 dark:bg-[var(--accent-2)]/05 blur-[150px] animate-ambient-pulse" />
     </div>
   );
 }

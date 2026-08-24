@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'react';
 
-export function useSmoothScroll(containerRef, enabled = true) {
+export function useSmoothScroll() {
   const scrollInstanceRef = useRef(null);
 
   useEffect(() => {
-    if (!enabled || typeof window === 'undefined') return;
+    if (typeof window === 'undefined') return;
 
-    // Disable smooth scrolling on touch devices
-    if (window.innerWidth <= 768 || 'ontouchstart' in window) return;
+    let isMounted = true;
 
     async function initScroll() {
       try {
@@ -22,20 +21,26 @@ export function useSmoothScroll(containerRef, enabled = true) {
           }
         }
 
-        scrollInstanceRef.current = new LocomotiveScroll({
-          el: containerRef.current || document.querySelector('[data-scroll-container]'),
-          smooth: true,
-          smoothMobile: false,
-          inertia: 0.8,
-        });
+        if (isMounted) {
+          scrollInstanceRef.current = new LocomotiveScroll({
+            lenisOptions: {
+              wrapper: window,
+              content: document.documentElement,
+              lerp: 0.1,
+              duration: 1.2,
+              smoothWheel: true,
+            },
+          });
+        }
       } catch {
-        // fallback to native scroll
+        // fallback
       }
     }
 
     initScroll();
 
     return () => {
+      isMounted = false;
       if (scrollInstanceRef.current) {
         try {
           scrollInstanceRef.current.destroy();
@@ -45,7 +50,7 @@ export function useSmoothScroll(containerRef, enabled = true) {
         scrollInstanceRef.current = null;
       }
     };
-  }, [containerRef, enabled]);
+  }, []);
 
   return scrollInstanceRef;
 }

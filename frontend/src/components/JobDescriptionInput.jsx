@@ -230,8 +230,17 @@ export default function JobDescriptionInput({
               data-lenis-prevent="true"
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              onWheel={(e) => e.stopPropagation()}
-              onTouchMove={(e) => e.stopPropagation()}
+              onWheel={(e) => {
+                const el = e.currentTarget;
+                if (el.scrollHeight > el.clientHeight) {
+                  const isAtTop = el.scrollTop === 0 && e.deltaY < 0;
+                  const isAtBottom =
+                    Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) < 1 && e.deltaY > 0;
+                  if (!isAtTop && !isAtBottom) {
+                    e.stopPropagation();
+                  }
+                }
+              }}
               placeholder="Paste job description requirements..."
               rows={8}
               disabled={isCreatingJob}
