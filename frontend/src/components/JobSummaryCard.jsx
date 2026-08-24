@@ -1,4 +1,4 @@
-import { Edit3, Briefcase, Clock } from 'lucide-react';
+import { Edit3, Briefcase, Clock, GraduationCap, Award } from 'lucide-react';
 
 export default function JobSummaryCard({ job, jobId, onEdit }) {
   if (!job) return null;
@@ -7,17 +7,25 @@ export default function JobSummaryCard({ job, jobId, onEdit }) {
   const preferredSkills = job.preferred_skills || [];
   const minYears = job.experience?.minimum_years;
 
+  const eduDegrees = job.education?.degrees || [];
+  const eduFields = job.education?.fields || [];
+  const educationBadges = [...eduDegrees, ...eduFields];
+
+  const preferredQuals = job.preferred_qualifications || [];
+  const allPreferred = [...preferredSkills, ...preferredQuals];
+
   return (
     <div className="bg-bg-surface border border-border rounded-lg p-5 flex flex-col justify-between h-full font-sans transition-colors">
       <div>
         <div className="flex items-center justify-between mb-3 border-b border-border/60 pb-3">
-          {/* Requirement 2: Small --accent-2 dot + mono label, no background fill */}
           <div className="flex items-center space-x-2 font-mono text-xs">
             <span className="flex items-center space-x-1.5 text-text-primary font-medium">
               <span className="w-2 h-2 rounded-full bg-[var(--accent-2)] inline-block" />
               <span>JOB READY</span>
             </span>
-            <span className="text-text-secondary font-mono text-[11px] font-medium">| ID: {jobId ? `${jobId.substring(0, 8)}...` : 'stored'}</span>
+            <span className="text-text-secondary font-mono text-[11px] font-medium">
+              | ID: {jobId ? `${jobId.substring(0, 8)}...` : 'stored'}
+            </span>
           </div>
 
           <button
@@ -38,15 +46,15 @@ export default function JobSummaryCard({ job, jobId, onEdit }) {
         {minYears !== null && minYears !== undefined && (
           <div className="flex items-center space-x-1.5 text-xs text-text-secondary mb-3 font-mono">
             <Clock className="w-3.5 h-3.5 text-accent" />
-            <span>MIN EXPERIENCE: {minYears}+ YEARS</span>
+            <span>MIN EXPERIENCE: {minYears > 0 ? `${minYears}+ YEARS` : 'ENTRY LEVEL / INTERN'}</span>
           </div>
         )}
 
-        {/* Requirement 2: Outline chips with mono eyebrow label */}
+        {/* Required Skills & Technical Tracks */}
         {requiredSkills.length > 0 && (
           <div className="mb-3 font-mono">
             <span className="text-[10px] text-text-muted uppercase tracking-wider block mb-1.5">
-              REQUIRED SKILLS · {requiredSkills.length}
+              REQUIRED SKILLS &amp; TRACKS · {requiredSkills.length}
             </span>
             <div className="flex flex-wrap gap-1.5">
               {requiredSkills.map((skill, idx) => (
@@ -61,18 +69,40 @@ export default function JobSummaryCard({ job, jobId, onEdit }) {
           </div>
         )}
 
-        {preferredSkills.length > 0 && (
-          <div className="font-mono">
-            <span className="text-[10px] text-text-muted uppercase tracking-wider block mb-1.5">
-              PREFERRED SKILLS · {preferredSkills.length}
+        {/* Education & Eligibility Criteria */}
+        {educationBadges.length > 0 && (
+          <div className="mb-3 font-mono">
+            <span className="text-[10px] text-text-muted uppercase tracking-wider flex items-center space-x-1 mb-1.5">
+              <GraduationCap className="w-3 h-3 text-accent" />
+              <span>EDUCATION &amp; ELIGIBILITY · {educationBadges.length}</span>
             </span>
             <div className="flex flex-wrap gap-1.5">
-              {preferredSkills.map((skill, idx) => (
+              {educationBadges.map((badge, idx) => (
+                <span
+                  key={idx}
+                  className="px-2 py-0.5 text-xs text-accent bg-accent/10 border border-accent/30 rounded"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Preferred Skills & Traits */}
+        {allPreferred.length > 0 && (
+          <div className="font-mono">
+            <span className="text-[10px] text-text-muted uppercase tracking-wider flex items-center space-x-1 mb-1.5">
+              <Award className="w-3 h-3 text-text-muted" />
+              <span>PREFERRED QUALIFICATIONS &amp; TRAITS · {allPreferred.length}</span>
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {allPreferred.map((item, idx) => (
                 <span
                   key={idx}
                   className="px-2.5 py-1 text-xs text-text-secondary bg-transparent border border-border/60 rounded"
                 >
-                  {skill}
+                  {item}
                 </span>
               ))}
             </div>

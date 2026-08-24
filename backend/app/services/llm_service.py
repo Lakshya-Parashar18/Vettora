@@ -200,9 +200,26 @@ def extract_structured_resume_with_llm(
         )
 
 
-def _build_job_description(data: dict) -> JobDescription:
+def _build_job_description(data: dict, jd_text: Optional[str] = None) -> JobDescription:
     raw_req_skills = [str(s) for s in data.get("required_skills", []) if s]
     raw_pref_skills = [str(s) for s in data.get("preferred_skills", []) if s]
+
+    # Hybrid merge: If LLM extracted a sparse list (< 5 skills) and raw text is available,
+    # run deterministic domain parser to merge missing engineering disciplines & competencies
+    if jd_text and len(raw_req_skills) < 5:
+        det_job = _fallback_deterministic_job_description(jd_text)
+        req_seen = {x.lower() for x in raw_req_skills}
+        pref_seen = {x.lower() for x in raw_pref_skills}
+        for s in det_job.required_skills:
+            if s.lower() not in req_seen and s.lower() not in pref_seen:
+                req_seen.add(s.lower())
+                raw_req_skills.append(s)
+
+        edu_dict = data.get("education") or {}
+        if not edu_dict.get("degrees") and det_job.education.degrees:
+            if "education" not in data:
+                data["education"] = {}
+            data["education"]["degrees"] = det_job.education.degrees
 
     exp_data = data.get("experience") or {}
     min_yrs = exp_data.get("minimum_years")
@@ -222,8 +239,15 @@ def _build_job_description(data: dict) -> JobDescription:
     responsibilities = [str(r) for r in data.get("responsibilities", []) if r]
     pref_quals = [str(pq) for pq in data.get("preferred_qualifications", []) if pq]
 
+    title_val = data.get("title")
+    if not title_val or title_val == "Software Engineer":
+        if jd_text:
+            first_line = [l.strip() for l in jd_text.split("\n") if l.strip()]
+            if first_line and len(first_line[0]) < 60:
+                title_val = first_line[0]
+
     return JobDescription(
-        title=data.get("title"),
+        title=title_val or "Decomposed Job Specification",
         required_skills=normalize_skills(raw_req_skills),
         preferred_skills=normalize_skills(raw_pref_skills),
         experience=exp_req,
@@ -242,36 +266,91 @@ def _fallback_deterministic_job_description(jd_text: str) -> JobDescription:
     title = (
         first_line
         if len(first_line) < 60
-        and not any(k in first_line.lower() for k in ["overview", "responsibilities", "qualifications"])
+        and not any(
+            k in first_line.lower()
+            for k in ["overview", "responsibilities", "qualifications", "summary", "description"]
+        )
         else "Software Engineer"
     )
 
     ontology = SkillOntology()
     found_skills = []
+    preferred_skills = []
     seen = set()
 
+    def add_skill(skill_name: str, is_pref: bool = False):
+        s_clean = skill_name.strip()
+        s_lower = s_clean.lower()
+        if s_lower and s_lower not in seen and len(s_clean) > 1:
+            seen.add(s_lower)
+            if is_pref:
+                preferred_skills.append(s_clean)
+            else:
+                found_skills.append(s_clean)
+
+    # 1. Ontology concept lookup
     for word in re.findall(r"\b[A-Za-z0-9.#+-]+\b", jd_text):
         cid = ontology.resolve_concept_id(word)
         if cid:
             concept = ontology.get_concept(cid)
             name = concept["name"] if concept else word
-            if name.lower() not in seen:
-                seen.add(name.lower())
-                found_skills.append(name)
+            add_skill(name)
 
+    # 2. General technology keywords lookup (standard industry tools/frameworks)
     common_techs = [
-        "React", "Python", "TypeScript", "JavaScript", "FastAPI", "MongoDB",
-        "PostgreSQL", "Docker", "Kubernetes", "AWS", "Terraform", "Helm",
-        "Redis", "Node.js", "REST APIs", "Django", "Flask", "Next.js",
-        "Tailwind CSS", "Linux", "Git", "CI/CD", "PyTorch", "LLMs", "RAG",
-        "Pandas", "SQL", "Microservices"
+        # Languages & Runtimes
+        "Python", "JavaScript", "TypeScript", "Java", "C++", "C#", "Go", "Rust",
+        "Swift", "Kotlin", "PHP", "Ruby", "Scala", "R", "SQL", "Bash",
+        # Frontend & Mobile
+        "React", "Next.js", "Vue.js", "Angular", "Svelte", "React Native", "Flutter",
+        "Redux", "Tailwind CSS", "HTML5", "CSS3",
+        # Backend & Web APIs
+        "FastAPI", "Django", "Flask", "Node.js", "Express.js", "Spring Boot",
+        "ASP.NET", "GraphQL", "REST APIs", "gRPC", "Microservices",
+        # AI, ML & Data Engineering
+        "PyTorch", "TensorFlow", "Keras", "Scikit-Learn", "LLMs", "RAG", "Pandas",
+        "NumPy", "Apache Spark", "Hadoop", "Kafka", "Airflow", "NLP",
+        "Computer Vision", "Data Science", "Machine Learning", "Deep Learning",
+        # Databases & Caching
+        "PostgreSQL", "MySQL", "MongoDB", "Redis", "Elasticsearch", "Cassandra",
+        "DynamoDB", "Snowflake", "BigQuery",
+        # Cloud, DevOps & SRE
+        "AWS", "GCP", "Azure", "Docker", "Kubernetes", "Terraform", "Helm",
+        "Ansible", "Jenkins", "GitHub Actions", "CI/CD", "Linux", "Prometheus",
+        "Grafana", "SRE", "System Monitoring", "Distributed Systems"
     ]
 
     for tech in common_techs:
         if re.search(r"\b" + re.escape(tech) + r"\b", jd_text, re.IGNORECASE):
-            if tech.lower() not in seen:
-                seen.add(tech.lower())
-                found_skills.append(tech)
+            add_skill(tech)
+
+    # 3. Dynamic Section & Bullet Point Harvester (General & Spec-Agnostic)
+    current_section = "required"
+    degrees_found = []
+
+    for line in lines:
+        l_lower = line.lower()
+        if any(h in l_lower for h in ["preferred", "nice to have", "plus", "desired"]):
+            current_section = "preferred"
+            continue
+        elif any(h in l_lower for h in ["minimum", "requirement", "responsibility", "description", "must have", "area"]):
+            current_section = "required"
+            continue
+
+        clean_line = re.sub(r"^[•\-*–\d\.\)\s]+", "", line).strip()
+        if not clean_line:
+            continue
+
+        # Dynamic Degree & Education Matcher
+        if any(deg in clean_line.lower() for deg in ["btech", "b.tech", "dual degree", "bachelor", "master", "phd", "b.e.", "m.tech", "degree"]):
+            if clean_line not in degrees_found and len(clean_line) < 80:
+                degrees_found.append(clean_line)
+
+        # Dynamic Bullet Point Extraction (General for any bulleted specification)
+        is_bullet = line.startswith("•") or line.startswith("-") or line.startswith("*") or bool(re.match(r"^\d+\.\s", line))
+        if is_bullet:
+            if 4 < len(clean_line) < 75:
+                add_skill(clean_line, is_pref=(current_section == "preferred"))
 
     min_years = None
     exp_match = re.search(r"(\d+)\+?\s*(?:-\s*(\d+))?\s*(?:years?|yrs?)", jd_text, re.IGNORECASE)
@@ -282,12 +361,16 @@ def _fallback_deterministic_job_description(jd_text: str) -> JobDescription:
             pass
 
     exp_req = ExperienceRequirement(minimum_years=min_years, maximum_years=None)
-    edu_req = EducationRequirement(required=False, degrees=[], fields=[])
+    edu_req = EducationRequirement(
+        required=len(degrees_found) > 0,
+        degrees=degrees_found if degrees_found else [],
+        fields=[]
+    )
 
     return JobDescription(
         title=title,
         required_skills=normalize_skills(found_skills),
-        preferred_skills=[],
+        preferred_skills=normalize_skills(preferred_skills),
         experience=exp_req,
         education=edu_req,
         responsibilities=[line for line in lines if line.startswith("-") or line.startswith("•")],
@@ -316,7 +399,7 @@ def extract_job_description_with_llm(jd_text: str) -> JobDescription:
             )
 
     try:
-        return _build_job_description(data)
+        return _build_job_description(data, jd_text=jd_text)
     except (ValidationError, Exception):
         raise LLMExtractionError(
             code="llm_extraction_failed",
