@@ -1,0 +1,396 @@
+@import "tailwindcss";
+
+@layer base {
+  :root, [data-theme="light"] {
+    /* Light Mode Assay Tokens (Paper & Oxidized Metal) */
+    --bg-base: #EEEBDD;         /* Paper — warm, grayer than typical cream */
+    --bg-surface: #F7F5EC;      /* Elevated paper card surface */
+    --bg-primary: #EEEBDD;
+    --bg-secondary: #E5E2D3;
+    
+    --text-primary: #1B1D18;    /* Deep charcoal ink */
+    --text-secondary: #56584C;  /* Muted olive slate */
+    --text-muted: #83847A;      /* Light muted slate */
+    --text-inverse: #F7F5EC;
+    
+    --border: #DCD8C6;          /* Fine paper hairline border */
+    --border-default: #DCD8C6;
+    --border-subtle: #E5E1CF;
+    --border-strong: #C4BFAC;
+    
+    --accent: #A8621E;          /* Oxidized Copper Brand Mark */
+    --accent-hover: #C17A34;    /* Copper Hover */
+    --accent-2: #4F7864;        /* Patina Verified / Matched State */
+    --danger-muted: #8B4A3E;    /* Desaturated Gap / Missing State */
+    
+    --focus-ring: rgba(168, 98, 30, 0.4);
+    --scrollbar-bg: #EEEBDD;
+    --scrollbar-thumb: #DCD8C6;
+    --scrollbar-thumb-hover: #C4BFAC;
+  }
+
+  [data-theme="dark"] {
+    /* Dark Mode Assay Tokens (Ink & Oxidized Metal) */
+    --bg-base: #0E1210;         /* Ink — near-black with faint green undertone */
+    --bg-surface: #10140F;      /* Surface — slightly lighter than base */
+    --bg-primary: #0E1210;
+    --bg-secondary: #141A16;
+    
+    --text-primary: #EFEADC;    /* Warm pale parchment text */
+    --text-secondary: #8B8C80;  /* Muted slate text */
+    --text-muted: #6B6C62;      /* Deep muted text */
+    --text-inverse: #0E1210;
+    
+    --border: #262920;          /* Subtle dark hairline border */
+    --border-default: #262920;
+    --border-subtle: #1B1F19;
+    --border-strong: #33382D;
+    
+    --accent: #A8621E;          /* Oxidized Copper Brand Mark */
+    --accent-hover: #C17A34;    /* Copper Hover */
+    --accent-2: #4F7864;        /* Patina Verified / Matched State */
+    --danger-muted: #8B4A3E;    /* Desaturated Gap / Missing State */
+    
+    --focus-ring: rgba(168, 98, 30, 0.4);
+    --scrollbar-bg: #0E1210;
+    --scrollbar-thumb: #262920;
+    --scrollbar-thumb-hover: #33382D;
+  }
+
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    min-height: 100dvh;
+    margin: 0;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  /* Global Keyboard Focus Ring (Requirement 1) */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Global Cursor Pointer for interactive buttons */
+  button, [role="button"] {
+    cursor: pointer;
+  }
+}
+
+@theme {
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-inverse: var(--text-inverse);
+
+  --color-border: var(--border);
+  --color-border-default: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-2: var(--accent-2);
+  --color-danger-muted: var(--danger-muted);
+}
+
+/* Standardized Button Variants (Requirement 1) */
+.btn-primary {
+  background-color: var(--accent);
+  color: var(--bg-base);
+  border: 1px solid var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.625rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  cursor: pointer;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  cursor: pointer;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--text-primary);
+}
+
+/* Stamp-Landing Animation on Score Seal (Requirement 2) */
+@keyframes stampLanding {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInOnly {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-stamp-landing {
+  animation: stampLanding 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-stamp-landing {
+    animation: fadeInOnly 200ms ease-out forwards;
+  }
+}
+
+@keyframes ledgerRowSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-ledger-row {
+  animation: ledgerRowSlide 200ms ease-out forwards;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Container system */
+.app-container {
+  width: 100%;
+  max-width: 76rem; /* 1216px */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3vw, 2rem);
+  padding-right: clamp(1rem, 3vw, 2rem);
+}
+
+/* Theme-Adaptive Image Icons for Dark/Light mode */
+[data-theme="dark"] .icon-theme-adaptive,
+.dark .icon-theme-adaptive {
+  filter: brightness(0) invert(0.75);
+}
+
+/* Select Option Dark/Light mode visibility fixes */
+select option {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] select option,
+.dark select option {
+  background-color: #141815 !important;
+  color: #E8E6DF !important;
+}
+
+[data-theme="light"] select option {
+  background-color: #FAF8ED !important;
+  color: #1B1E19 !important;
+}
+
+/* Ensure main cards are 100% solid and opaque (not translucent) */
+.bg-bg-surface {
+  background-color: var(--bg-surface) !important;
+  opacity: 1 !important;
+  position: relative;
+  z-index: 10;
+}
+
+.bg-bg-base {
+  background-color: var(--bg-base) !important;
+  opacity: 1 !important;
+}
+
+[data-theme="dark"] .bg-bg-surface,
+.dark .bg-bg-surface {
+  background-color: #141815 !important;
+}
+
+[data-theme="dark"] .bg-bg-base,
+.dark .bg-bg-base {
+  background-color: #0F1310 !important;
+}
+
+[data-theme="light"] .bg-bg-surface {
+  background-color: #F7F5EC !important;
+}
+
+[data-theme="light"] .bg-bg-base {
+  background-color: #EEEBDD !important;
+}
+
+/* Ambient Background Animations */
+@keyframes blob-float {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(35px, -55px) scale(1.08);
+  }
+  66% {
+    transform: translate(-25px, 25px) scale(0.94);
+  }
+}
+
+@keyframes blob-float-reverse {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(-45px, 40px) scale(0.92);
+  }
+  66% {
+    transform: translate(30px, -35px) scale(1.06);
+  }
+}
+
+@keyframes grid-pulse {
+  0%, 100% {
+    opacity: 0.12;
+  }
+  50% {
+    opacity: 0.24;
+  }
+}
+
+.animate-blob-slow {
+  animation: blob-float 24s ease-in-out infinite;
+}
+
+.animate-blob-reverse {
+  animation: blob-float-reverse 28s ease-in-out infinite;
+}
+
+.animate-grid-pulse {
+  animation: grid-pulse 12s ease-in-out infinite;
+}
+
+@keyframes scan-beam {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-scan-beam {
+  animation: scan-beam 7s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes ambient-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.06);
+  }
+}
+
+.animate-ambient-pulse {
+  animation: ambient-pulse 16s ease-in-out infinite;
+}

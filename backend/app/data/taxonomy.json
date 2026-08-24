@@ -1,0 +1,251 @@
+{
+  "version": "1.0.0",
+  "source": "ESCO + Vettora Custom Domain Overlays",
+  "concepts": {
+    "computer_science_fundamentals": {
+      "id": "computer_science_fundamentals",
+      "name": "Computer Science Fundamentals",
+      "category": "cs_fundamentals",
+      "esco_uri": "http://data.europa.eu/esco/skill/cs-fundamentals",
+      "synonyms": [
+        "CS Fundamentals",
+        "Core CS",
+        "Computer Science Core",
+        "Computer Science Principles",
+        "fundamentals in computer science",
+        "fundamentals in cs",
+        "computer science, it"
+      ],
+      "abbreviations": ["CS"],
+      "broader_concepts": [],
+      "narrower_concepts": [
+        "data_structures",
+        "algorithms",
+        "object_oriented_programming",
+        "database_management_systems",
+        "operating_systems",
+        "computer_networks",
+        "design_and_analysis_of_algorithms"
+      ],
+      "related_skills": ["software_engineering", "system_design"],
+      "prerequisites": []
+    },
+    "data_structures": {
+      "id": "data_structures",
+      "name": "Data Structures",
+      "category": "cs_fundamentals",
+      "synonyms": ["Data Structure", "Data Structures & Algorithms"],
+      "abbreviations": ["DS", "DSA"],
+      "broader_concepts": ["computer_science_fundamentals"],
+      "narrower_concepts": ["arrays", "linked_lists", "trees", "graphs", "hash_tables", "stacks", "queues"],
+      "related_skills": ["algorithms"],
+      "prerequisites": ["programming_fundamentals"]
+    },
+    "algorithms": {
+      "id": "algorithms",
+      "name": "Algorithms",
+      "category": "cs_fundamentals",
+      "synonyms": ["Algorithmic Problem Solving", "Algorithm Design"],
+      "abbreviations": ["Algo", "DAA"],
+      "broader_concepts": ["computer_science_fundamentals"],
+      "narrower_concepts": ["sorting", "searching", "dynamic_programming", "recursion", "graph_algorithms"],
+      "related_skills": ["data_structures"],
+      "prerequisites": ["programming_fundamentals"]
+    },
+    "object_oriented_programming": {
+      "id": "object_oriented_programming",
+      "name": "Object-Oriented Programming",
+      "category": "cs_fundamentals",
+      "synonyms": ["Object Oriented Programming", "Object Oriented Design"],
+      "abbreviations": ["OOP", "OOPS"],
+      "broader_concepts": ["computer_science_fundamentals"],
+      "narrower_concepts": ["encapsulation", "inheritance", "polymorphism", "abstraction"],
+      "related_skills": ["java", "cpp", "python"],
+      "prerequisites": []
+    },
+    "database_management_systems": {
+      "id": "database_management_systems",
+      "name": "Database Management Systems",
+      "category": "cs_fundamentals",
+      "synonyms": ["Database Management", "Database Systems", "Relational Databases"],
+      "abbreviations": ["DBMS", "RDBMS"],
+      "broader_concepts": ["computer_science_fundamentals"],
+      "narrower_concepts": ["sql", "indexing", "normalization", "transactions", "acid_properties"],
+      "related_skills": ["postgresql", "mysql", "mongodb"],
+      "prerequisites": []
+    },
+    "operating_systems": {
+      "id": "operating_systems",
+      "name": "Operating Systems",
+      "category": "cs_fundamentals",
+      "synonyms": ["Operating System", "OS Concepts"],
+      "abbreviations": ["OS"],
+      "broader_concepts": ["computer_science_fundamentals"],
+      "narrower_concepts": ["process_management", "memory_management", "concurrency", "file_systems", "linux"],
+      "related_skills": ["linux", "c", "cpp"],
+      "prerequisites": []
+    },
+    "computer_networks": {
+      "id": "computer_networks",
+      "name": "Computer Networks",
+      "category": "cs_fundamentals",
+      "synonyms": ["Computer Network", "Networking Principles", "Network Protocols"],
+      "abbreviations": ["CN"],
+      "broader_concepts": ["computer_science_fundamentals"],
+      "narrower_concepts": ["tcp_ip", "http_https", "dns", "sockets", "osi_model"],
+      "related_skills": ["rest_api", "web_protocols"],
+      "prerequisites": []
+    },
+    "machine_learning": {
+      "id": "machine_learning",
+      "name": "Machine Learning",
+      "category": "ai_ml",
+      "esco_uri": "http://data.europa.eu/esco/skill/machine-learning",
+      "synonyms": ["Machine Learning Engineering", "ML Development"],
+      "abbreviations": ["ML"],
+      "broader_concepts": ["artificial_intelligence"],
+      "narrower_concepts": [
+        "supervised_learning",
+        "unsupervised_learning",
+        "classification",
+        "regression",
+        "model_evaluation",
+        "feature_engineering"
+      ],
+      "related_skills": ["python", "scikit_learn", "pandas", "deep_learning"],
+      "prerequisites": ["python", "statistics"]
+    },
+    "deep_learning": {
+      "id": "deep_learning",
+      "name": "Deep Learning",
+      "category": "ai_ml",
+      "synonyms": ["Neural Networks", "Deep Neural Networks"],
+      "abbreviations": ["DL"],
+      "broader_concepts": ["machine_learning"],
+      "narrower_concepts": ["convolutional_neural_networks", "recurrent_neural_networks", "transformers"],
+      "related_skills": ["pytorch", "tensorflow"],
+      "prerequisites": ["machine_learning"]
+    },
+    "full_stack_development": {
+      "id": "full_stack_development",
+      "name": "Full-Stack Development",
+      "category": "technical",
+      "synonyms": ["Full Stack Development", "Full Stack Engineering"],
+      "abbreviations": ["Full-Stack", "FullStack"],
+      "broader_concepts": [],
+      "narrower_concepts": ["frontend_development", "backend_development", "rest_api", "databases"],
+      "related_skills": ["react", "node_js", "python", "fastapi"],
+      "prerequisites": []
+    },
+    "kubernetes": {
+      "id": "kubernetes",
+      "name": "Kubernetes",
+      "category": "cloud_devops",
+      "synonyms": ["K8s", "Container Orchestration"],
+      "abbreviations": ["K8s"],
+      "broader_concepts": ["cloud_infrastructure"],
+      "narrower_concepts": ["helm", "kubectl", "pods", "ingress"],
+      "related_skills": ["docker"],
+      "prerequisites": ["docker"]
+    },
+    "docker": {
+      "id": "docker",
+      "name": "Docker",
+      "category": "cloud_devops",
+      "synonyms": ["Containerization", "Docker Containers"],
+      "abbreviations": [],
+      "broader_concepts": ["cloud_infrastructure"],
+      "narrower_concepts": ["dockerfile", "docker_compose"],
+      "related_skills": ["kubernetes"],
+      "prerequisites": []
+    },
+    "react": {
+      "id": "react",
+      "name": "React",
+      "category": "frontend",
+      "synonyms": ["React.js", "ReactJS", "React Frontend"],
+      "abbreviations": [],
+      "broader_concepts": ["frontend_development"],
+      "narrower_concepts": ["jsx", "react_hooks", "redux"],
+      "related_skills": ["javascript", "typescript", "angular", "vue"],
+      "prerequisites": ["javascript"]
+    },
+    "angular": {
+      "id": "angular",
+      "name": "Angular",
+      "category": "frontend",
+      "synonyms": ["AngularJS", "Angular Framework"],
+      "abbreviations": [],
+      "broader_concepts": ["frontend_development"],
+      "narrower_concepts": ["rxjs", "ng_modules"],
+      "related_skills": ["react", "typescript"],
+      "prerequisites": ["typescript"]
+    },
+    "sql": {
+      "id": "sql",
+      "name": "SQL",
+      "category": "database",
+      "synonyms": ["Structured Query Language"],
+      "abbreviations": [],
+      "broader_concepts": ["database_management_systems"],
+      "narrower_concepts": ["queries", "joins", "subqueries"],
+      "related_skills": ["postgresql", "mysql", "sqlite"],
+      "prerequisites": []
+    },
+    "postgresql": {
+      "id": "postgresql",
+      "name": "PostgreSQL",
+      "category": "database",
+      "synonyms": ["Postgres", "Postgres DB"],
+      "abbreviations": [],
+      "broader_concepts": ["sql"],
+      "narrower_concepts": ["pg_trgm", "psql"],
+      "related_skills": ["sql", "mysql"],
+      "prerequisites": ["sql"]
+    },
+    "mysql": {
+      "id": "mysql",
+      "name": "MySQL",
+      "category": "database",
+      "synonyms": ["MySQL DB"],
+      "abbreviations": [],
+      "broader_concepts": ["sql"],
+      "narrower_concepts": [],
+      "related_skills": ["sql", "postgresql"],
+      "prerequisites": ["sql"]
+    },
+    "aws": {
+      "id": "aws",
+      "name": "Amazon Web Services",
+      "category": "cloud_devops",
+      "synonyms": ["AWS", "Amazon Cloud", "AWS Certified Solutions Architect", "AWS Course", "AWS Certification"],
+      "abbreviations": ["AWS"],
+      "broader_concepts": ["cloud_infrastructure"],
+      "narrower_concepts": ["s3", "ec2", "lambda", "ecs"],
+      "related_skills": ["cloud_infrastructure", "gcp", "azure"],
+      "prerequisites": []
+    },
+    "communication_skills": {
+      "id": "communication_skills",
+      "name": "Communication Skills",
+      "category": "soft_skill",
+      "synonyms": ["Communication", "Interpersonal Skills", "Verbal Communication", "Written Communication"],
+      "abbreviations": [],
+      "broader_concepts": [],
+      "narrower_concepts": ["technical_presentation", "documentation", "client_engagement"],
+      "related_skills": ["teamwork", "collaboration"],
+      "prerequisites": []
+    },
+    "leadership": {
+      "id": "leadership",
+      "name": "Leadership",
+      "category": "soft_skill",
+      "synonyms": ["Team Leadership", "Lead", "Management", "GDSC Core Member", "Core Member", "Community Lead"],
+      "abbreviations": [],
+      "broader_concepts": [],
+      "narrower_concepts": ["team_lead", "mentorship", "community_lead"],
+      "related_skills": ["project_management"],
+      "prerequisites": []
+    }
+  }
+}
